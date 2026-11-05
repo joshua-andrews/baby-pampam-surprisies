@@ -74,6 +74,14 @@
   .fill{height:100%;width:0;background:linear-gradient(90deg,#fff,var(--red));box-shadow:0 0 14px var(--red);border-radius:99px;transition:width 1s}
   .prog-row{display:flex;justify-content:space-between;font-size:.72rem;opacity:.7;margin-top:6px;letter-spacing:.06em}
 
+  .dest{display:inline-flex;align-items:center;gap:5px}
+  .miniflag{width:22px;height:15px;border-radius:3px;border:1px solid #fff;box-shadow:0 0 8px rgba(224,18,47,.6)}
+  .word{position:fixed;z-index:51;pointer-events:none;white-space:nowrap;transform:translate(-50%,0);
+        font-weight:700;font-size:clamp(1rem,4.5vw,1.25rem);color:#fff;padding:6px 14px;border-radius:99px;
+        background:linear-gradient(135deg,rgba(224,18,47,.95),rgba(140,10,28,.95));border:1.5px solid #fff;
+        box-shadow:0 6px 20px rgba(224,18,47,.55);animation:word 2s cubic-bezier(.2,.8,.3,1) forwards}
+  @keyframes word{0%{opacity:0;transform:translate(-50%,0) scale(.5)}15%{opacity:1;transform:translate(-50%,-70px) scale(1.08)}
+                  75%{opacity:1;transform:translate(-50%,-110px) scale(1)}100%{opacity:0;transform:translate(-50%,-140px) scale(.95)}}
   .hint{margin-top:auto;padding-top:28px;font-size:.75rem;opacity:.55;letter-spacing:.1em}
 
   /* flowers */
@@ -207,7 +215,7 @@
 
   <div class="prog">
     <div class="bar"><div class="fill" id="fill"></div></div>
-    <div class="prog-row"><span>HelloTalk · Aug 2026</span><span id="pct">0%</span><span>Together 🌻</span></div>
+    <div class="prog-row"><span>HelloTalk · Aug 2026</span><span id="pct">0%</span><span class="dest">Together 🌻 <svg class="miniflag" viewBox="0 0 300 200" preserveAspectRatio="none"><use href="#flagMX"/></svg></span></div>
   </div>
 
   <div class="hint">tap anywhere 🇨🇦 🇲🇽</div>
@@ -255,7 +263,20 @@
     document.body.appendChild(h);
   }
 
-  // tap anywhere -> Canada or Mexico flag
+  const WORDS = ["Te quiero mucho 🫂","Mi bebita ❤️","Mi corazón ❤️❤️","Mi pampamcita 🥺","Your chocolate man 🍫","🎵 country rooooad 🎵","It's a dear \u{1FAF1}\u{1F3FE}\u200D\u{1FAF2}\u{1F3FC}"];
+  let lastWord = -1;
+  function sayWord(x,y){
+    let i; do { i = Math.floor(Math.random()*WORDS.length); } while (i === lastWord && WORDS.length > 1);
+    lastWord = i;
+    const w = document.createElement('div');
+    w.className = 'word'; w.textContent = WORDS[i];
+    const pad = 110;
+    w.style.left = Math.min(window.innerWidth-pad, Math.max(pad, x))+'px';
+    w.style.top = Math.max(150, y)+'px';
+    document.body.appendChild(w);
+    setTimeout(()=>w.remove(), 2050);
+  }
+  // tap anywhere -> Canada or Mexico flag + a sweet word
   let flip = Math.random() < .5;
   document.addEventListener('pointerdown', e => {
     flip = !flip;
@@ -270,6 +291,7 @@
     f.style.setProperty('--dx', (Math.random()*120-60)+'px');
     document.body.appendChild(f);
     setTimeout(()=>f.remove(), 1700);
+    sayWord(e.clientX, e.clientY - 30);
     for (let i=0;i<6;i++){
       const sp = document.createElement('div');
       sp.className='spark'; sp.textContent = i%2 ? '❤' : '✦';
