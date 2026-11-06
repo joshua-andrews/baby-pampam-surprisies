@@ -90,12 +90,12 @@
   .fall{position:fixed;top:-50px;z-index:4;pointer-events:none;will-change:transform,opacity,filter;opacity:0}
   .fall svg{width:28px;height:19px;display:block;border-radius:4px;border:1.5px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.35)}
   .fall.horse-f{font-size:24px;line-height:1}
-  .music{position:fixed;right:12px;bottom:14px;z-index:30;display:flex;align-items:center;gap:10px;padding:7px 14px 7px 7px;
-         border-radius:99px;background:rgba(20,4,8,.78);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-         box-shadow:0 8px 24px rgba(0,0,0,.45);color:#fff;font-size:.78rem;opacity:0;transform:translateY(20px);transition:opacity .6s, transform .6s}
+  .music{position:fixed;right:12px;bottom:14px;z-index:30;display:flex;align-items:center;padding:0;
+         border-radius:50%;background:none;border:0;
+         color:#fff;opacity:0;transform:translateY(20px);transition:opacity .6s, transform .6s}
   .music.on{opacity:1;transform:none}
-  .mbtn{width:34px;height:34px;border-radius:50%;border:0;background:var(--red);color:#fff;font-size:15px;cursor:pointer;
-        display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(224,18,47,.7)}
+  .mbtn{width:48px;height:48px;border-radius:50%;border:2px solid #fff;background:var(--red);color:#fff;font-size:16px;cursor:pointer;
+        display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(224,18,47,.6)}
   .music.nudge .mbtn{animation:nudge 1.2s ease-in-out infinite}
   @keyframes nudge{50%{transform:scale(1.15);box-shadow:0 0 20px rgba(224,18,47,1)}}
   .mtext{display:flex;flex-direction:column;line-height:1.2}
@@ -198,7 +198,6 @@
 <audio id="song" src="song.mp3#t=69" preload="auto" playsinline></audio>
 <div id="music" class="music" aria-label="Music">
   <button id="mbtn" class="mbtn" aria-label="Play or pause music"><span id="micon">♪</span></button>
-  <div class="mtext"><b>Our song 🎵</b><span>made for you by Baby Yoush</span></div>
 </div>
 
 <!-- envelope -->
