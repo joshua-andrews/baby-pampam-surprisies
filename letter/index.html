@@ -87,9 +87,9 @@
   .need li.done{color:#a07a80;text-decoration:line-through;text-decoration-color:rgba(224,18,47,.6)}
   .need li.done::before{background:var(--red)}
   .need li.done::after{transform:rotate(45deg) scale(1)}
-  .fall{position:fixed;top:-60px;z-index:4;pointer-events:none;will-change:transform;opacity:.9}
-  .fall svg{width:34px;height:23px;display:block;border-radius:4px;border:1.5px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.35)}
-  .fall.horse-f{font-size:30px;line-height:1}
+  .fall{position:fixed;top:-50px;z-index:4;pointer-events:none;will-change:transform,opacity,filter;opacity:0}
+  .fall svg{width:28px;height:19px;display:block;border-radius:4px;border:1.5px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.35)}
+  .fall.horse-f{font-size:24px;line-height:1}
   .timeline{position:relative;margin-top:8px}
   .timeline::before{content:"";position:absolute;left:21px;top:8px;bottom:8px;width:2px;
                     background:linear-gradient(var(--red),rgba(224,18,47,.15))}
@@ -361,29 +361,32 @@
     a.addEventListener('click',e=>burst(e.clientX,e.clientY,12));
   });
 
-  // flags and baby horses drifting down gently
-  const FALL=['CA','MX','horse','CA','MX','horse'];
-  let fi=0;
+  // flags and baby horses drifting down gently, then dissolving into thin air
+  const FALL=['CA','MX','horse'];
   function dropOne(){
-    const kind=FALL[fi++%FALL.length];
+    const kind=FALL[Math.floor(Math.random()*FALL.length)];
     const el=document.createElement('div'); el.className='fall'+(kind==='horse'?' horse-f':'');
     if(kind==='horse'){ el.textContent='🐎'; }
     else el.innerHTML = kind==='CA'
       ? '<svg viewBox="0 0 9600 4800" preserveAspectRatio="none"><use href="#flagCA"/></svg>'
       : '<svg viewBox="0 0 300 200" preserveAspectRatio="none"><use href="#flagMX"/></svg>';
-    const x=Math.random()*(innerWidth-40), drift=(Math.random()*80-40), dur=11000+Math.random()*6000, H=innerHeight+120;
+    const H=innerHeight+120, x=Math.random()*(innerWidth-40), drift=Math.random()*70-35;
     const flip = kind==='horse' && Math.random()<.5 ? -1 : 1;
+    const vanishAt = .3 + Math.random()*.5;            // somewhere between 30% and 80% of the way down
+    const dur = (15000+Math.random()*7000) * (vanishAt+.15);
+    const y = f => H*f;
     el.style.left=x+'px';
     document.body.appendChild(el);
     el.animate([
-      {transform:`translate(0,0) rotate(-12deg) scaleX(${flip})`},
-      {transform:`translate(${drift*.6}px,${H*.33}px) rotate(10deg) scaleX(${flip})`},
-      {transform:`translate(${-drift*.4}px,${H*.66}px) rotate(-8deg) scaleX(${flip})`},
-      {transform:`translate(${drift}px,${H}px) rotate(12deg) scaleX(${flip})`}
-    ],{duration:dur,easing:'linear'}).onfinish=()=>el.remove();
+      {offset:0,                transform:`translate(0,0) rotate(-10deg) scaleX(${flip})`, opacity:0, filter:'blur(0)'},
+      {offset:.08,              opacity:.8},
+      {offset:.45,              transform:`translate(${drift*.6}px,${y(vanishAt*.5)}px) rotate(8deg) scaleX(${flip})`, opacity:.8, filter:'blur(0)'},
+      {offset:.8,               transform:`translate(${-drift*.3}px,${y(vanishAt)}px) rotate(-6deg) scaleX(${flip})`, opacity:.75, filter:'blur(0)'},
+      {offset:1,                transform:`translate(${drift}px,${y(vanishAt+.06)}px) rotate(10deg) scale(${1.5*flip},1.5)`, opacity:0, filter:'blur(6px)'}
+    ],{duration:dur,easing:'ease-in-out',fill:'forwards'}).onfinish=()=>el.remove();
+    setTimeout(dropOne, 3500+Math.random()*4500);    // a new one every 3.5–8 seconds
   }
-  setInterval(dropOne, 2000);
-  dropOne();
+  setTimeout(dropOne, 1200);
 
   // envelope
   const env=document.getElementById('env'), stage=document.getElementById('stage'), letter=document.getElementById('letter');
@@ -399,10 +402,8 @@
 
   // scratch cards, each one locked until its time
   function fmtLeft(ms){
-    const s=Math.ceil(ms/1000), d=Math.floor(s/86400), h=Math.floor(s%86400/3600), m=Math.floor(s%3600/60), x=s%60;
-    if(d>0) return d+'d '+h+'h '+m+'m';
-    if(h>0) return h+'h '+m+'m '+x+'s';
-    return m+'m '+String(x).padStart(2,'0')+'s';
+    const s=Math.max(0,Math.ceil(ms/1000)), d=Math.floor(s/86400), h=Math.floor(s%86400/3600), m=Math.floor(s%3600/60), x=s%60;
+    return d+'d '+h+'h '+m+'m '+x+'s';
   }
   function setupScratch(){
     document.querySelectorAll('.card').forEach(card=>{
