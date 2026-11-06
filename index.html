@@ -34,8 +34,12 @@
   .eyebrow{letter-spacing:.35em;font-size:.72rem;font-weight:500;text-transform:uppercase;opacity:.75}
   h1{font-family:'Great Vibes',cursive;font-weight:400;font-size:clamp(2.6rem,9vw,4.4rem);line-height:1.05;
      margin:6px 0 2px;text-shadow:var(--glow)}
-  h1 .nw{white-space:nowrap;display:inline-block}
-  h1 .amp{color:var(--red)}
+  h1 .nw{white-space:nowrap;display:block}
+  h1 .amp{color:var(--red);display:flex;align-items:center;justify-content:center;gap:14px;
+          font-size:.75em;line-height:.9;margin:-2px 0 2px;text-shadow:0 0 14px rgba(224,18,47,.9)}
+  h1 .amp i{display:block;width:clamp(40px,12vw,80px);height:1.5px;
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,.85));box-shadow:0 0 8px rgba(224,18,47,.8)}
+  h1 .amp i:last-child{background:linear-gradient(90deg,rgba(255,255,255,.85),transparent)}
 
   /* photos in hearts */
   .hearts{position:relative;width:min(92vw,520px);height:min(56vw,320px);margin:18px 0 8px}
@@ -83,6 +87,7 @@
         box-shadow:0 6px 20px rgba(224,18,47,.55);animation:word 2s cubic-bezier(.2,.8,.3,1) forwards}
   @keyframes word{0%{opacity:0;transform:translate(-50%,0) scale(.5)}15%{opacity:1;transform:translate(-50%,-70px) scale(1.08)}
                   75%{opacity:1;transform:translate(-50%,-110px) scale(1)}100%{opacity:0;transform:translate(-50%,-140px) scale(.95)}}
+  .hint .miniflag{vertical-align:middle;margin-left:4px}
   .hint{margin-top:auto;padding-top:28px;font-size:.75rem;opacity:.55;letter-spacing:.1em}
 
   /* flowers */
@@ -182,7 +187,7 @@
 
 <div class="wrap">
   <div class="eyebrow">Countdown to us</div>
-  <h1><span class="nw">Baby Yoush <span class="amp">&amp;</span></span> <span class="nw">Baby Pampam</span></h1>
+  <h1><span class="nw">Baby Yoush</span><span class="amp"><i></i>&amp;<i></i></span><span class="nw">Baby Pampam</span></h1>
 
   <div class="hearts">
     <div class="hp left">
@@ -212,14 +217,14 @@
     <div class="unit"><div class="num" id="m">--</div><div class="lbl">MIN</div></div>
     <div class="unit"><div class="num" id="s">--</div><div class="lbl">SEG <span>·</span> SEC</div></div>
   </div>
-  <div class="msg" id="msg">until I finally hug you</div>
+  <div class="msg" id="msg">until we finally hug each other</div>
 
   <div class="prog">
     <div class="bar"><div class="fill" id="fill"></div></div>
-    <div class="prog-row"><span>HelloTalk · Aug 2026</span><span id="pct">0%</span><span class="dest">Together 🌻 <svg class="miniflag" viewBox="0 0 300 200" preserveAspectRatio="none"><use href="#flagMX"/></svg></span></div>
+    <div class="prog-row"><span>HelloTalk 💬</span><span id="pct">0%</span><span class="dest">Together 🌻 <svg class="miniflag" viewBox="0 0 300 200" preserveAspectRatio="none"><use href="#flagMX"/></svg></span></div>
   </div>
 
-  <div class="hint">tap anywhere 🇨🇦 🇲🇽</div>
+  <div class="hint">tap anywhere <svg class="miniflag" viewBox="0 0 9600 4800" preserveAspectRatio="none"><use href="#flagCA"/></svg> <svg class="miniflag" viewBox="0 0 300 200" preserveAspectRatio="none"><use href="#flagMX"/></svg></div>
 </div>
 
 <script>
@@ -240,7 +245,7 @@
   }
   function tick(){
     const now = Date.now();
-    let target = ARRIVE, msg = 'until I finally hug you';
+    let target = ARRIVE, msg = 'until we finally hug each other';
     if (now >= ARRIVE && now < LEAVE){ target = LEAVE; msg = '¡Juntos por fin! Together at last ❤️'; }
     else if (now >= LEAVE){ msg = 'Te quiero muchísimo · until next time ❤️'; }
     const diff = Math.max(0, target - now);
