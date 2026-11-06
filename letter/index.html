@@ -80,7 +80,13 @@
   .need ul{list-style:none;margin-top:6px}
   .need li{position:relative;padding:7px 0 7px 30px;font-size:.95rem;border-bottom:1px dashed rgba(224,18,47,.18)}
   .need li:last-child{border-bottom:0}
-  .need li::before{content:"";position:absolute;left:4px;top:50%;width:14px;height:14px;margin-top:-8px;border:2px solid var(--red);border-radius:4px}
+  .need li{cursor:pointer;transition:color .2s}
+  .need li::before{content:"";position:absolute;left:4px;top:50%;width:14px;height:14px;margin-top:-9px;border:2px solid var(--red);border-radius:4px;transition:background .2s}
+  .need li::after{content:"";position:absolute;left:9px;top:50%;width:5px;height:9px;margin-top:-7px;border:solid #fff;border-width:0 2.5px 2.5px 0;
+                  transform:rotate(45deg) scale(0);transition:transform .2s}
+  .need li.done{color:#a07a80;text-decoration:line-through;text-decoration-color:rgba(224,18,47,.6)}
+  .need li.done::before{background:var(--red)}
+  .need li.done::after{transform:rotate(45deg) scale(1)}
   .fall{position:fixed;top:-60px;z-index:4;pointer-events:none;will-change:transform;opacity:.9}
   .fall svg{width:34px;height:23px;display:block;border-radius:4px;border:1.5px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.35)}
   .fall.horse-f{font-size:30px;line-height:1}
@@ -204,7 +210,7 @@
     <div class="date">Domingo 8 de noviembre 💌</div>
 
     <p class="intro">Even though we're <em>far far away</em>, I'm going to make every moment count, because you're extremely special to me.</p>
-    <p class="intro intro2">Our first date is this Sunday, and I planned everything because you're my <em>beautiful princesa</em>, and with me you'll never have to work again 😌</p>
+    <p class="intro intro2">Our first date is this Sunday, and I planned everything because you're my <em>hermosa princesa</em>, and with me you'll never have to work again 😌</p>
 
     <div class="need">
       <div class="need-title">You will need</div>
@@ -213,6 +219,7 @@
         <li>Cute pajamas</li>
         <li>Your laptop</li>
         <li>Your phone (with good battery)</li>
+        <li>Your big fat A*** 🎵</li>
       </ul>
     </div>
 
@@ -253,7 +260,7 @@
         <div class="time">7:00 – 8:00 PM</div>
         <div class="card" data-unlock="2026-11-08T19:00:00-06:00">
           <div class="inner">
-            <h3>Movie time</h3>
+            <h3>Show time</h3>
             <p>We're watching something together. My pick, and it's a surprise 🤫🍿</p>
           </div>
           <canvas></canvas>
@@ -315,7 +322,7 @@
       </div>
       <div class="rsvp-note">(you don't get a choice 😌)</div>
     </div>
-    <div class="ps">P.S. Te quiero mucho 🫂</div>
+    <div class="ps">P.S. Country roooooad 🎵</div>
   </div>
 </main>
 
@@ -338,6 +345,12 @@
       document.body.appendChild(s); setTimeout(()=>s.remove(),1050);
     }
   }
+
+  // tap to check off the "You will need" list
+  document.querySelectorAll('.need li').forEach(li=>li.addEventListener('click',e=>{
+    li.classList.toggle('done');
+    if(li.classList.contains('done')) burst(e.clientX,e.clientY,6);
+  }));
 
   // RSVP -> WhatsApp with the message prefilled
   const WA_NUMBER = ''; // e.g. '19055551234' (country code + number, no + or spaces). Empty = she picks the chat.
@@ -382,7 +395,7 @@
   });
 
   // PREVIEW: every card is unlocked so you can see them. Set to false to turn the time locks back on.
-  const PREVIEW_UNLOCK_ALL = true;
+  const PREVIEW_UNLOCK_ALL = false;
 
   // scratch cards, each one locked until its time
   function fmtLeft(ms){
