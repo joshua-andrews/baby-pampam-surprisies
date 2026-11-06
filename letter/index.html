@@ -74,7 +74,16 @@
   .yes:active{transform:scale(.94)}
   .rsvp-note{font-size:.75rem;color:#8a5a60;margin-top:8px}
   .card .quote{font-family:'Great Vibes',cursive;font-size:1.55rem;line-height:1.2;color:var(--red);margin:8px 0 4px}
-  .horse{position:fixed;z-index:4;pointer-events:none;font-size:42px;top:30vh;left:0;will-change:transform;filter:drop-shadow(0 4px 10px rgba(0,0,0,.4))}
+  .need{margin:22px auto 4px;max-width:360px;background:#fff;border:1.5px solid rgba(224,18,47,.3);border-radius:14px;padding:14px 18px 12px;
+        box-shadow:0 6px 18px rgba(140,10,28,.1)}
+  .need-title{font-family:'Great Vibes',cursive;font-size:1.8rem;color:var(--red);text-align:center;line-height:1.1}
+  .need ul{list-style:none;margin-top:6px}
+  .need li{position:relative;padding:7px 0 7px 30px;font-size:.95rem;border-bottom:1px dashed rgba(224,18,47,.18)}
+  .need li:last-child{border-bottom:0}
+  .need li::before{content:"";position:absolute;left:4px;top:50%;width:14px;height:14px;margin-top:-8px;border:2px solid var(--red);border-radius:4px}
+  .fall{position:fixed;top:-60px;z-index:4;pointer-events:none;will-change:transform;opacity:.9}
+  .fall svg{width:34px;height:23px;display:block;border-radius:4px;border:1.5px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.35)}
+  .fall.horse-f{font-size:30px;line-height:1}
   .timeline{position:relative;margin-top:8px}
   .timeline::before{content:"";position:absolute;left:21px;top:8px;bottom:8px;width:2px;
                     background:linear-gradient(var(--red),rgba(224,18,47,.15))}
@@ -145,6 +154,25 @@
       </g>
     </symbol>
     
+<symbol id="flagCA" viewBox="0 0 9600 4800">
+      <rect width="9600" height="4800" fill="#d52b1e"/>
+      <rect x="2400" width="4800" height="4800" fill="#fff"/>
+      <path fill="#d52b1e" d="m4890 4430-45-863a95 95 0 0 1 111-98l859 151-116-320a65 65 0 0 1 20-73l941-762-212-99a65 65 0 0 1-34-79l186-572-542 115a65 65 0 0 1-73-38l-105-247-423 454a65 65 0 0 1-111-57l204-1052-327 189a65 65 0 0 1-91-27l-332-652-332 652a65 65 0 0 1-91 27l-327-189 204 1052a65 65 0 0 1-111 57l-423-454-105 247a65 65 0 0 1-73 38l-542-115 186 572a65 65 0 0 1-34 79l-212 99 941 762a65 65 0 0 1 20 73l-116 320 859-151a95 95 0 0 1 111 98l-45 863z"/>
+    </symbol>
+    <symbol id="flagMX" viewBox="0 0 300 200">
+      <rect width="100" height="200" fill="#006847"/>
+      <rect x="100" width="100" height="200" fill="#fff"/>
+      <rect x="200" width="100" height="200" fill="#ce1126"/>
+      <g transform="translate(150 100)">
+        <path d="M-26 8 C-24 26 24 26 26 8" fill="none" stroke="#2e7d32" stroke-width="5"/>
+        <ellipse cx="0" cy="-4" rx="15" ry="19" fill="#8b5a2b"/>
+        <circle cx="-4" cy="-20" r="7" fill="#6b4220"/>
+        <path d="M-16 -8 C-30 -20 -26 -32 -12 -26Z" fill="#6b4220"/>
+        <path d="M14 -6 C28 -16 26 -28 12 -22Z" fill="#6b4220"/>
+        <rect x="-10" y="14" width="20" height="4" fill="#4a90c2"/>
+      </g>
+    </symbol>
+  
 </defs></svg>
 
 <svg class="flower f1"><use href="#sunflower"/></svg>
@@ -176,7 +204,17 @@
     <div class="date">Domingo 8 de noviembre 💌</div>
 
     <p class="intro">Even though we're <em>far far away</em>, I'm going to make every moment count, because you're extremely special to me.</p>
-    <p class="intro intro2">Our first date is this Sunday, and I planned everything so you barely have to use your little legsies 🥹</p>
+    <p class="intro intro2">Our first date is this Sunday, and I planned everything because you're my <em>beautiful princesa</em>, and with me you'll never have to work again 😌</p>
+
+    <div class="need">
+      <div class="need-title">You will need</div>
+      <ul>
+        <li>A nice dress</li>
+        <li>Cute pajamas</li>
+        <li>Your laptop</li>
+        <li>Your phone (with good battery)</li>
+      </ul>
+    </div>
 
     <p class="how">Each card unlocks when it's time. Then scratch it open ✨<br>(all times are Mérida time)</p>
 
@@ -202,7 +240,7 @@
             <h3>Dinner &amp; music</h3>
             <p>We're having dinner together, with a playlist I made just for us 🎶</p>
             <ul>
-              <li><b>Dress up like it's our first date</b>, because it is 😌</li>
+              <li><b>Dress up like it's our first date</b>, because it is</li>
               <li>Have your <b>laptop ready</b> so we can listen to the same songs together</li>
             </ul>
           </div>
@@ -212,15 +250,57 @@
 
       <div class="stop">
         <div class="dot">3</div>
-        <div class="time">7:00 – 8:30 PM</div>
+        <div class="time">7:00 – 8:00 PM</div>
         <div class="card" data-unlock="2026-11-08T19:00:00-06:00">
           <div class="inner">
-            <h3>Movie night</h3>
-            <p>One movie or show, watched together. My pick, and it's a surprise 🤫🍿</p>
+            <h3>Movie time</h3>
+            <p>We're watching something together. My pick, and it's a surprise 🤫🍿</p>
           </div>
           <canvas></canvas>
         </div>
       </div>
+
+      <div class="stop">
+        <div class="dot">4</div>
+        <div class="time">8:00 – 8:30 PM</div>
+        <div class="card" data-unlock="2026-11-08T20:00:00-06:00">
+          <div class="inner">
+            <h3>Game night</h3>
+            <p>First, download <b>GamePigeon</b> from the App Store. Then we're playing three games:</p>
+            <ul>
+              <li>Basketball 🏀</li>
+              <li>Paintball 🎨</li>
+              <li>Minigolf ⛳</li>
+            </ul>
+          </div>
+          <canvas></canvas>
+        </div>
+      </div>
+
+      <div class="stop">
+        <div class="dot">5</div>
+        <div class="time">8:30 – 9:30 PM</div>
+        <div class="card" data-unlock="2026-11-08T20:30:00-06:00">
+          <div class="inner">
+            <h3>Karaoke</h3>
+            <p>Warm up that beautiful voice 🎤 One song is mandatory, and you already know which one… country roooooad 🎵</p>
+          </div>
+          <canvas></canvas>
+        </div>
+      </div>
+
+      <div class="stop">
+        <div class="dot">6</div>
+        <div class="time">9:30 – 9:45 PM</div>
+        <div class="card" data-unlock="2026-11-08T21:30:00-06:00">
+          <div class="inner">
+            <h3>It's a secret</h3>
+            <p>You'll find out when we get there 🤫❤️</p>
+          </div>
+          <canvas></canvas>
+        </div>
+      </div>
+
     </div>
 
     <div class="sign">
@@ -235,7 +315,7 @@
       </div>
       <div class="rsvp-note">(you don't get a choice 😌)</div>
     </div>
-    <div class="ps">P.S. Country roooooad 🎵</div>
+    <div class="ps">P.S. Te quiero mucho 🫂</div>
   </div>
 </main>
 
@@ -268,22 +348,29 @@
     a.addEventListener('click',e=>burst(e.clientX,e.clientY,12));
   });
 
-  // my baby horse, galloping across now and then
-  function horse(){
-    const h=document.createElement('div'); h.className='horse'; h.textContent='🐎';
-    const ltr=Math.random()<.5, y=10+Math.random()*70, dur=5500+Math.random()*3000, W=innerWidth+120;
-    h.style.top=y+'vh';
-    document.body.appendChild(h);
-    h.animate([
-      {transform:`translate(${ltr?-80:W}px,0) scaleX(${ltr?-1:1})`},
-      {transform:`translate(${ltr?W*.25:W*.75}px,-28px) scaleX(${ltr?-1:1})`},
-      {transform:`translate(${ltr?W*.5:W*.5}px,6px) scaleX(${ltr?-1:1})`},
-      {transform:`translate(${ltr?W*.75:W*.25}px,-28px) scaleX(${ltr?-1:1})`},
-      {transform:`translate(${ltr?W:-80}px,0) scaleX(${ltr?-1:1})`}
-    ],{duration:dur,easing:'linear'}).onfinish=()=>h.remove();
-    setTimeout(horse, 9000+Math.random()*9000);
+  // flags and baby horses drifting down gently
+  const FALL=['CA','MX','horse','CA','MX','horse'];
+  let fi=0;
+  function dropOne(){
+    const kind=FALL[fi++%FALL.length];
+    const el=document.createElement('div'); el.className='fall'+(kind==='horse'?' horse-f':'');
+    if(kind==='horse'){ el.textContent='🐎'; }
+    else el.innerHTML = kind==='CA'
+      ? '<svg viewBox="0 0 9600 4800" preserveAspectRatio="none"><use href="#flagCA"/></svg>'
+      : '<svg viewBox="0 0 300 200" preserveAspectRatio="none"><use href="#flagMX"/></svg>';
+    const x=Math.random()*(innerWidth-40), drift=(Math.random()*80-40), dur=11000+Math.random()*6000, H=innerHeight+120;
+    const flip = kind==='horse' && Math.random()<.5 ? -1 : 1;
+    el.style.left=x+'px';
+    document.body.appendChild(el);
+    el.animate([
+      {transform:`translate(0,0) rotate(-12deg) scaleX(${flip})`},
+      {transform:`translate(${drift*.6}px,${H*.33}px) rotate(10deg) scaleX(${flip})`},
+      {transform:`translate(${-drift*.4}px,${H*.66}px) rotate(-8deg) scaleX(${flip})`},
+      {transform:`translate(${drift}px,${H}px) rotate(12deg) scaleX(${flip})`}
+    ],{duration:dur,easing:'linear'}).onfinish=()=>el.remove();
   }
-  setTimeout(horse, 2500);
+  setInterval(dropOne, 2000);
+  dropOne();
 
   // envelope
   const env=document.getElementById('env'), stage=document.getElementById('stage'), letter=document.getElementById('letter');
@@ -293,6 +380,9 @@
     env.classList.add('open'); burst(e.clientX,e.clientY,14);
     setTimeout(()=>{ stage.classList.add('gone'); letter.classList.add('show'); setupScratch(); window.scrollTo(0,0); },1900);
   });
+
+  // PREVIEW: every card is unlocked so you can see them. Set to false to turn the time locks back on.
+  const PREVIEW_UNLOCK_ALL = true;
 
   // scratch cards, each one locked until its time
   function fmtLeft(ms){
@@ -314,7 +404,7 @@
         ctx.bezierCurveTo(s*.45,-s*1.05,s*1.1,-s*.35,0,s*.35);ctx.closePath();ctx.fill();ctx.restore();};
       const lock=(x,y)=>{ctx.save();ctx.fillStyle='#fff';ctx.strokeStyle='#fff';ctx.lineWidth=2;
         ctx.beginPath();ctx.arc(x,y-4,5,Math.PI,0);ctx.stroke();ctx.fillRect(x-7,y-4,14,11);ctx.restore();};
-      const isOpen=()=>Date.now()>=unlockAt;
+      const isOpen=()=>PREVIEW_UNLOCK_ALL || Date.now()>=unlockAt;
 
       const paint=()=>{
         ctx.globalCompositeOperation='source-over';
