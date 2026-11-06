@@ -100,7 +100,6 @@
   @keyframes nudge{50%{transform:scale(1.15);box-shadow:0 0 20px rgba(224,18,47,1)}}
   .mtext{display:flex;flex-direction:column;line-height:1.2}
   .mtext span{opacity:.7;font-size:.7rem}
-  .mframe{position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;left:0;top:0}
   .timeline{position:relative;margin-top:8px}
   .timeline::before{content:"";position:absolute;left:21px;top:8px;bottom:8px;width:2px;
                     background:linear-gradient(var(--red),rgba(224,18,47,.15))}
@@ -195,11 +194,11 @@
 <svg class="flower f1"><use href="#sunflower"/></svg>
 <svg class="flower f2"><use href="#lily"/></svg>
 
-<!-- music: official music video audio from YouTube, 1:09 to 1:49, fading and looping -->
+<!-- music: the song Josh made for her, from 1:09 -->
+<audio id="song" src="song.mp3#t=69" preload="auto" playsinline></audio>
 <div id="music" class="music" aria-label="Music">
   <button id="mbtn" class="mbtn" aria-label="Play or pause music"><span id="micon">♪</span></button>
-  <div class="mtext"><b>Sailor Song</b><span>Gigi Perez</span></div>
-  <div class="mframe"><div id="yt"></div></div>
+  <div class="mtext"><b>Our song 🎵</b><span>made for you by Baby Yoush</span></div>
 </div>
 
 <!-- envelope -->
@@ -406,58 +405,27 @@
   }
   setTimeout(dropOne, 1200);
 
-  // ---- music ----
-  const CLIP_START=69, CLIP_END=109, FADE_IN=2.5, FADE_OUT=4, MAX_VOL=80;
-  let yt=null, ytReady=false, wantPlay=false, playing=false;
-  const music=document.getElementById('music'), micon=document.getElementById('micon');
-  window.onYouTubeIframeAPIReady=function(){
-    yt=new YT.Player('yt',{width:1,height:1,videoId:'1lrFsXkT_rM',host:'https://www.youtube-nocookie.com',
-      playerVars:{start:CLIP_START,controls:0,playsinline:1,rel:0,disablekb:1,modestbranding:1},
-      events:{
-        onReady:()=>{ ytReady=true; yt.setVolume(0); if(wantPlay) startMusic(); },
-        onError:()=>fallback(),
-        onStateChange:e=>{
-          playing = e.data===YT.PlayerState.PLAYING;
-          micon.textContent = playing ? '❚❚' : '▶';
-          if(playing) music.classList.remove('nudge');
-          if(e.data===YT.PlayerState.ENDED){ yt.seekTo(CLIP_START,true); yt.playVideo(); }
-        }
-      }});
-  };
-  (function(){const s=document.createElement('script'); s.src='https://www.youtube.com/iframe_api'; document.head.appendChild(s);})();
+  // ---- music: plays from 1:09 the moment she opens the envelope ----
+  const CLIP_START=69, FADE_IN=2.5;
+  const song=document.getElementById('song'), music=document.getElementById('music'), micon=document.getElementById('micon');
+  function setIcon(){ micon.textContent = song.paused ? '▶' : '❚❚'; }
   function startMusic(){
-    wantPlay=true;
-    if(!ytReady) return;
-    const t=yt.getCurrentTime();
-    if(t<CLIP_START-1||t>CLIP_END) yt.seekTo(CLIP_START,true);
-    yt.playVideo();
-    // phones sometimes block sound that wasn't started by a direct tap: invite a tap if it didn't start
-    setTimeout(()=>{ if(!playing){ micon.textContent='▶'; music.classList.add('nudge'); attempts++; if(attempts>=2) fallback(); } },2500);
+    try{ if(song.readyState>=1 && song.currentTime<CLIP_START-1) song.currentTime=CLIP_START; }catch(e){}
+    song.addEventListener('loadedmetadata',()=>{ if(song.currentTime<CLIP_START-1) song.currentTime=CLIP_START; },{once:true});
+    song.volume=0;
+    const p=song.play();
+    if(p&&p.catch) p.catch(()=>{ music.classList.add('nudge'); setIcon(); });
+    const t0=performance.now();
+    const fade=()=>{ const v=Math.min(1,(performance.now()-t0)/(FADE_IN*1000)); try{song.volume=v;}catch(e){} if(v<1) requestAnimationFrame(fade); };
+    requestAnimationFrame(fade);
   }
-  let attempts=0, fellBack=false;
-  // if YouTube refuses to play here (e.g. Safari's bot check), turn the pill into a link that opens the song at 1:09
-  function fallback(){
-    if(fellBack) return; fellBack=true;
-    music.classList.remove('nudge');
-    const a=document.createElement('a');
-    a.href='https://www.youtube.com/watch?v=1lrFsXkT_rM&t=69s'; a.target='_blank'; a.rel='noopener';
-    a.className='music on'; a.style.textDecoration='none';
-    a.innerHTML='<span class="mbtn" style="display:flex">▶</span><div class="mtext"><b>Play our song</b><span>Sailor Song · opens YouTube</span></div>';
-    music.replaceWith(a);
-  }
+  song.addEventListener('play',()=>{ music.classList.remove('nudge'); setIcon(); });
+  song.addEventListener('pause',setIcon);
+  song.addEventListener('ended',()=>{ song.currentTime=CLIP_START; song.play(); });
   document.getElementById('mbtn').addEventListener('click',e=>{
     e.stopPropagation();
-    if(!ytReady){ wantPlay=true; return; }
-    if(playing){ yt.pauseVideo(); wantPlay=false; } else startMusic();
+    if(song.paused){ song.volume=1; song.play(); } else song.pause();
   });
-  // fade in at 0:56, fade out toward 1:44, then loop back
-  setInterval(()=>{
-    if(!ytReady||!playing) return;
-    const t=yt.getCurrentTime();
-    if(t>=CLIP_END-0.1||t<CLIP_START-1){ yt.seekTo(CLIP_START,true); yt.setVolume(0); return; }
-    const v=Math.max(0,Math.min(1,(t-CLIP_START)/FADE_IN,(CLIP_END-t)/FADE_OUT));
-    yt.setVolume(Math.round(v*MAX_VOL));
-  },100);
 
   // envelope
   const env=document.getElementById('env'), stage=document.getElementById('stage'), letter=document.getElementById('letter');
