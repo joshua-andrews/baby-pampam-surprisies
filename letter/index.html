@@ -195,7 +195,7 @@
 <svg class="flower f1"><use href="#sunflower"/></svg>
 <svg class="flower f2"><use href="#lily"/></svg>
 
-<!-- music: official audio from YouTube, 0:56 to 1:44, fading and looping -->
+<!-- music: official music video audio from YouTube, 1:07 to 1:49, fading and looping -->
 <div id="music" class="music" aria-label="Music">
   <button id="mbtn" class="mbtn" aria-label="Play or pause music"><span id="micon">♪</span></button>
   <div class="mtext"><b>Sailor Song</b><span>Gigi Perez</span></div>
@@ -407,11 +407,11 @@
   setTimeout(dropOne, 1200);
 
   // ---- music ----
-  const CLIP_START=56, CLIP_END=104, FADE_IN=2.5, FADE_OUT=4, MAX_VOL=80;
+  const CLIP_START=67, CLIP_END=109, FADE_IN=2.5, FADE_OUT=4, MAX_VOL=80;
   let yt=null, ytReady=false, wantPlay=false, playing=false;
   const music=document.getElementById('music'), micon=document.getElementById('micon');
   window.onYouTubeIframeAPIReady=function(){
-    yt=new YT.Player('yt',{width:1,height:1,videoId:'m0NZ-aH0G1g',
+    yt=new YT.Player('yt',{width:1,height:1,videoId:'1lrFsXkT_rM',
       playerVars:{start:CLIP_START,controls:0,playsinline:1,rel:0,disablekb:1,modestbranding:1},
       events:{
         onReady:()=>{ ytReady=true; yt.setVolume(0); if(wantPlay) startMusic(); },
