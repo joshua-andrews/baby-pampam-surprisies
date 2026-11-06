@@ -90,6 +90,17 @@
   .fall{position:fixed;top:-50px;z-index:4;pointer-events:none;will-change:transform,opacity,filter;opacity:0}
   .fall svg{width:28px;height:19px;display:block;border-radius:4px;border:1.5px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.35)}
   .fall.horse-f{font-size:24px;line-height:1}
+  .music{position:fixed;right:12px;bottom:14px;z-index:30;display:flex;align-items:center;gap:10px;padding:7px 14px 7px 7px;
+         border-radius:99px;background:rgba(20,4,8,.78);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+         box-shadow:0 8px 24px rgba(0,0,0,.45);color:#fff;font-size:.78rem;opacity:0;transform:translateY(20px);transition:opacity .6s, transform .6s}
+  .music.on{opacity:1;transform:none}
+  .mbtn{width:34px;height:34px;border-radius:50%;border:0;background:var(--red);color:#fff;font-size:15px;cursor:pointer;
+        display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(224,18,47,.7)}
+  .music.nudge .mbtn{animation:nudge 1.2s ease-in-out infinite}
+  @keyframes nudge{50%{transform:scale(1.15);box-shadow:0 0 20px rgba(224,18,47,1)}}
+  .mtext{display:flex;flex-direction:column;line-height:1.2}
+  .mtext span{opacity:.7;font-size:.7rem}
+  .mframe{position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;left:0;top:0}
   .timeline{position:relative;margin-top:8px}
   .timeline::before{content:"";position:absolute;left:21px;top:8px;bottom:8px;width:2px;
                     background:linear-gradient(var(--red),rgba(224,18,47,.15))}
@@ -183,6 +194,13 @@
 
 <svg class="flower f1"><use href="#sunflower"/></svg>
 <svg class="flower f2"><use href="#lily"/></svg>
+
+<!-- music: official audio from YouTube, 0:56 to 1:44, fading and looping -->
+<div id="music" class="music" aria-label="Music">
+  <button id="mbtn" class="mbtn" aria-label="Play or pause music"><span id="micon">♪</span></button>
+  <div class="mtext"><b>Sailor Song</b><span>Gigi Perez</span></div>
+  <div class="mframe"><div id="yt"></div></div>
+</div>
 
 <!-- envelope -->
 <div id="stage">
@@ -388,12 +406,54 @@
   }
   setTimeout(dropOne, 1200);
 
+  // ---- music ----
+  const CLIP_START=56, CLIP_END=104, FADE_IN=2.5, FADE_OUT=4, MAX_VOL=80;
+  let yt=null, ytReady=false, wantPlay=false, playing=false;
+  const music=document.getElementById('music'), micon=document.getElementById('micon');
+  window.onYouTubeIframeAPIReady=function(){
+    yt=new YT.Player('yt',{width:1,height:1,videoId:'m0NZ-aH0G1g',
+      playerVars:{start:CLIP_START,controls:0,playsinline:1,rel:0,disablekb:1,modestbranding:1},
+      events:{
+        onReady:()=>{ ytReady=true; yt.setVolume(0); if(wantPlay) startMusic(); },
+        onStateChange:e=>{
+          playing = e.data===YT.PlayerState.PLAYING;
+          micon.textContent = playing ? '❚❚' : '▶';
+          if(playing) music.classList.remove('nudge');
+          if(e.data===YT.PlayerState.ENDED){ yt.seekTo(CLIP_START,true); yt.playVideo(); }
+        }
+      }});
+  };
+  (function(){const s=document.createElement('script'); s.src='https://www.youtube.com/iframe_api'; document.head.appendChild(s);})();
+  function startMusic(){
+    wantPlay=true;
+    if(!ytReady) return;
+    const t=yt.getCurrentTime();
+    if(t<CLIP_START-1||t>CLIP_END) yt.seekTo(CLIP_START,true);
+    yt.playVideo();
+    // phones sometimes block sound that wasn't started by a direct tap: invite a tap if it didn't start
+    setTimeout(()=>{ if(!playing){ micon.textContent='▶'; music.classList.add('nudge'); } },1800);
+  }
+  document.getElementById('mbtn').addEventListener('click',e=>{
+    e.stopPropagation();
+    if(!ytReady) return;
+    if(playing){ yt.pauseVideo(); wantPlay=false; } else startMusic();
+  });
+  // fade in at 0:56, fade out toward 1:44, then loop back
+  setInterval(()=>{
+    if(!ytReady||!playing) return;
+    const t=yt.getCurrentTime();
+    if(t>=CLIP_END-0.1||t<CLIP_START-1){ yt.seekTo(CLIP_START,true); yt.setVolume(0); return; }
+    const v=Math.max(0,Math.min(1,(t-CLIP_START)/FADE_IN,(CLIP_END-t)/FADE_OUT));
+    yt.setVolume(Math.round(v*MAX_VOL));
+  },100);
+
   // envelope
   const env=document.getElementById('env'), stage=document.getElementById('stage'), letter=document.getElementById('letter');
   let opened=false;
   env.addEventListener('click',e=>{
     if(opened) return; opened=true;
     env.classList.add('open'); burst(e.clientX,e.clientY,14);
+    startMusic(); music.classList.add('on');
     setTimeout(()=>{ stage.classList.add('gone'); letter.classList.add('show'); setupScratch(); window.scrollTo(0,0); },1900);
   });
 
