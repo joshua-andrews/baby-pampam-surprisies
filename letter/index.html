@@ -411,10 +411,11 @@
   let yt=null, ytReady=false, wantPlay=false, playing=false;
   const music=document.getElementById('music'), micon=document.getElementById('micon');
   window.onYouTubeIframeAPIReady=function(){
-    yt=new YT.Player('yt',{width:1,height:1,videoId:'1lrFsXkT_rM',
+    yt=new YT.Player('yt',{width:1,height:1,videoId:'1lrFsXkT_rM',host:'https://www.youtube-nocookie.com',
       playerVars:{start:CLIP_START,controls:0,playsinline:1,rel:0,disablekb:1,modestbranding:1},
       events:{
         onReady:()=>{ ytReady=true; yt.setVolume(0); if(wantPlay) startMusic(); },
+        onError:()=>fallback(),
         onStateChange:e=>{
           playing = e.data===YT.PlayerState.PLAYING;
           micon.textContent = playing ? '❚❚' : '▶';
@@ -431,11 +432,22 @@
     if(t<CLIP_START-1||t>CLIP_END) yt.seekTo(CLIP_START,true);
     yt.playVideo();
     // phones sometimes block sound that wasn't started by a direct tap: invite a tap if it didn't start
-    setTimeout(()=>{ if(!playing){ micon.textContent='▶'; music.classList.add('nudge'); } },1800);
+    setTimeout(()=>{ if(!playing){ micon.textContent='▶'; music.classList.add('nudge'); attempts++; if(attempts>=2) fallback(); } },2500);
+  }
+  let attempts=0, fellBack=false;
+  // if YouTube refuses to play here (e.g. Safari's bot check), turn the pill into a link that opens the song at 1:09
+  function fallback(){
+    if(fellBack) return; fellBack=true;
+    music.classList.remove('nudge');
+    const a=document.createElement('a');
+    a.href='https://www.youtube.com/watch?v=1lrFsXkT_rM&t=69s'; a.target='_blank'; a.rel='noopener';
+    a.className='music on'; a.style.textDecoration='none';
+    a.innerHTML='<span class="mbtn" style="display:flex">▶</span><div class="mtext"><b>Play our song</b><span>Sailor Song · opens YouTube</span></div>';
+    music.replaceWith(a);
   }
   document.getElementById('mbtn').addEventListener('click',e=>{
     e.stopPropagation();
-    if(!ytReady) return;
+    if(!ytReady){ wantPlay=true; return; }
     if(playing){ yt.pauseVideo(); wantPlay=false; } else startMusic();
   });
   // fade in at 0:56, fade out toward 1:44, then loop back
