@@ -110,9 +110,16 @@
 
   @media (max-width:420px){ .hint{padding-bottom:110px} }
   @media (prefers-reduced-motion:reduce){ *{animation:none!important} }
+  .mbtn{position:fixed;right:14px;bottom:14px;z-index:70;width:48px;height:48px;border-radius:50%;border:2px solid #fff;
+        background:var(--red);color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+        box-shadow:0 6px 18px rgba(224,18,47,.6);padding:0}
+  .mbtn.nudge{animation:mnudge 1.3s ease-in-out infinite}
+  @keyframes mnudge{50%{transform:scale(1.12);box-shadow:0 0 22px rgba(224,18,47,1)}}
 </style>
 </head>
 <body>
+<audio id="song" src="song.mp3#t=48" preload="auto" playsinline></audio>
+<button id="mbtn" class="mbtn nudge" aria-label="Play or pause music"><span id="micon">▶</span></button>
 
 <!-- reusable SVG defs -->
 <svg width="0" height="0" style="position:absolute">
@@ -309,6 +316,49 @@
       setTimeout(()=>sp.remove(), 950);
     }
   });
+</script>
+<script>
+  // ---- music: 0:48 to 1:16, fades in, fades out over the last 2 seconds, then loops ----
+  (function(){
+    const START=48, FADE_OUT_AT=74, END=76, FADE_IN=2;
+    const song=document.getElementById('song'), btn=document.getElementById('mbtn'), icon=document.getElementById('micon');
+    let actx=null, gain=null, started=false;
+    function setupAudio(){
+      if(actx) return;
+      try{ const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+        actx=new AC(); const src=actx.createMediaElementSource(song); gain=actx.createGain(); src.connect(gain); gain.connect(actx.destination);
+      }catch(e){ actx=null; gain=null; }
+    }
+    const setVol=v=>{ v=Math.max(0,Math.min(1,v)); if(gain) gain.gain.value=v; else { try{song.volume=v;}catch(e){} } };
+    const toStart=()=>{ try{ song.currentTime=START; }catch(e){} };
+    const setIcon=()=>{ icon.textContent = song.paused ? '▶' : '❚❚'; };
+    function start(){
+      if(started) return; started=true;
+      setupAudio(); if(actx&&actx.state==='suspended') actx.resume();
+      if(song.readyState>=1){ if(song.currentTime<START-1||song.currentTime>END) toStart(); }
+      else song.addEventListener('loadedmetadata',()=>{ if(song.currentTime<START-1) toStart(); },{once:true});
+      setVol(0);
+      const p=song.play(); if(p&&p.catch) p.catch(()=>{ started=false; });
+    }
+    (function tick(){
+      if(!song.paused){ const t=song.currentTime;
+        if(t>=END-0.05||t<START-1){ setVol(0); toStart(); }
+        else setVol(Math.min((t-START)/FADE_IN,(END-t)/(END-FADE_OUT_AT),1)); }
+      requestAnimationFrame(tick);
+    })();
+    song.addEventListener('play',()=>{ btn.classList.remove('nudge'); setIcon(); });
+    song.addEventListener('pause',setIcon);
+    song.addEventListener('ended',()=>{ toStart(); song.play(); });
+    // try to start right away (works if the browser allows it), otherwise on her first tap anywhere
+    try{ start(); }catch(e){}
+    document.addEventListener('pointerdown',e=>{ if(e.target.closest('#mbtn')) return; if(song.paused&&!started) start(); },{capture:true});
+    btn.addEventListener('pointerdown',e=>e.stopPropagation());
+    btn.addEventListener('click',e=>{
+      e.stopPropagation();
+      if(!started){ start(); return; }
+      if(song.paused){ if(actx&&actx.state==='suspended') actx.resume(); song.play(); } else song.pause();
+    });
+  })();
 </script>
 </body>
 </html>
