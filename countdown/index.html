@@ -293,7 +293,7 @@
 
   <div class="prog">
     <div class="bar"><div class="fill" id="fill"></div></div>
-    <div class="prog-row"><span>HelloTalk 💬</span><span id="pct">0%</span><span class="dest">Together 🌻 <svg class="miniflag" viewBox="0 0 300 200" preserveAspectRatio="none"><use href="#flagMX"/></svg></span></div>
+    <div class="prog-row"><span>Nov 8 · First date 💌</span><span id="pct">0%</span><span class="dest">Feb 10 🌻 <svg class="miniflag" viewBox="0 0 300 200" preserveAspectRatio="none"><use href="#flagMX"/></svg></span></div>
   </div>
 
   <div class="hint">tap anywhere <svg class="miniflag" viewBox="0 0 9600 4800" preserveAspectRatio="none"><use href="#flagCA"/></svg> <svg class="miniflag" viewBox="0 0 300 200" preserveAspectRatio="none"><use href="#flagMX"/></svg></div>
@@ -301,7 +301,7 @@
 
 <script>
   // Arrival: Feb 10 2027, midnight Mérida time (UTC-6). Visit ends Feb 18 2027, end of day.
-  const START  = new Date('2026-08-25T00:00:00-06:00').getTime();
+  const START  = new Date('2026-11-08T00:00:00-06:00').getTime();
   const ARRIVE = new Date('2027-02-10T00:00:00-06:00').getTime();
   const LEAVE  = new Date('2027-02-19T00:00:00-06:00').getTime();
 
@@ -415,7 +415,11 @@
     song.addEventListener('pause',setIcon);
     song.addEventListener('ended',()=>{ toStart(); song.play(); });
     // try to start right away (works if the browser allows it), otherwise on her first tap anywhere
-    window.cdStartSong=start;
+    function unlock(){
+      setupAudio(); if(actx&&actx.state==='suspended') actx.resume();
+      try{ setVol(0); const p=song.play(); if(p&&p.then) p.then(()=>{ if(!started) song.pause(); }).catch(()=>{}); else if(!started) song.pause(); }catch(e){}
+    }
+    window.cdStartSong=start; window.cdUnlockSong=unlock;
     document.addEventListener('pointerdown',e=>{ if(e.target.closest('#mbtn')) return; const g=document.getElementById('gate'); if(g&&!g.classList.contains('done')) return; if(song.paused&&!started) start(); },{capture:true});
     btn.addEventListener('pointerdown',e=>e.stopPropagation());
     btn.addEventListener('click',e=>{
@@ -467,7 +471,9 @@
     function land(){
       done=true;
       // this drag counts as her tap, so the song is allowed to play with sound
-      if(window.cdStartSong) try{ window.cdStartSong(); }catch(_e){}
+      // her drag counts as a tap: unlock sound now, start the song 2 seconds later as the countdown appears
+      if(window.cdUnlockSong) try{ window.cdUnlockSong(); }catch(_e){}
+      setTimeout(()=>{ if(window.cdStartSong) try{ window.cdStartSong(); }catch(_e){} }, 2000);
       const btn=document.getElementById('mbtn'); if(btn) btn.style.display='';
       const from={...pos}, t0=performance.now(), D=450;
       (function step(now){ const k=Math.min(1,(now-t0)/D), e=1-Math.pow(1-k,3);
