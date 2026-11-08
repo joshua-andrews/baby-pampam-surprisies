@@ -100,6 +100,18 @@
   @keyframes nudge{50%{transform:scale(1.15);box-shadow:0 0 20px rgba(224,18,47,1)}}
   .mtext{display:flex;flex-direction:column;line-height:1.2}
   .mtext span{opacity:.7;font-size:.7rem}
+  .card.shrek{border-color:rgba(107,142,35,.55);background:linear-gradient(180deg,#f6fbe9 0%,#fff 55%)}
+  .card.shrek h3{color:#4f6f1c}
+  .swamp-tag{display:inline-block;white-space:nowrap;font-size:.68rem;font-weight:600;letter-spacing:.03em;color:#fff;background:#6b8e23;
+             padding:4px 10px;border-radius:99px;margin-bottom:6px;box-shadow:0 3px 10px rgba(107,142,35,.35)}
+  .shrek-list{list-style:none;counter-reset:s;margin:10px 0 4px}
+  .card .shrek-list li{counter-increment:s;position:relative;margin:0;padding:8px 0 8px 40px;border-bottom:1px dashed rgba(107,142,35,.35)}
+  .card .shrek-list li:last-child{border-bottom:0}
+  .card .shrek-list li::before{content:counter(s);color:#fff;position:absolute;left:0;top:9px;width:28px;height:28px;border-radius:50%;
+             background:#6b8e23;color:#fff;font-weight:700;font-size:.85rem;display:flex;align-items:center;justify-content:center}
+  .shrek-list b{display:block;font-size:.98rem;color:#2a3a10}
+  .shrek-list span{display:block;font-size:.82rem;color:#6a6a5a;margin-top:1px}
+  .burro{text-align:right;font-size:.8rem;color:#6b8e23;font-weight:600;margin-top:6px}
   .timeline{position:relative;margin-top:8px}
   .timeline::before{content:"";position:absolute;left:21px;top:8px;bottom:8px;width:2px;
                     background:linear-gradient(var(--red),rgba(224,18,47,.15))}
@@ -276,10 +288,17 @@
       <div class="stop">
         <div class="dot">3</div>
         <div class="time">7:00 – 8:00 PM</div>
-        <div class="card" data-unlock="2026-11-08T19:00:00-06:00">
+        <div class="card shrek" data-unlock="2026-11-08T19:00:00-06:00">
           <div class="inner">
-            <h3>Show time</h3>
-            <p>We're watching something together. My pick, and it's a surprise 🤫🍿</p>
+            <div class="swamp-tag">🧅 Straight from Far Far Away 🧅</div>
+            <h3>Shrek Marathon</h3>
+            <p>Three short Shrek specials, back to back, just for you:</p>
+            <ol class="shrek-list">
+              <li><b>Shrek 4-D</b><span>The warm-up, right after the first movie</span></li>
+              <li><b>Scared Shrekless</b><span>The spooky one, for your demons 😈</span></li>
+              <li><b>Shrek the Halls</b><span>A cozy Christmas ending 🎄</span></li>
+            </ol>
+            <p class="burro">Burro approved 🐴</p>
           </div>
           <canvas></canvas>
         </div>
